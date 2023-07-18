@@ -42,6 +42,12 @@
           <td id="cant_sucursales48hs"></td>
           <td><button type="button" class="btn btn-primary btn-sm" (click)="getSucursales48Hs()"><fa-icon [icon]="faRefresh"></fa-icon></button></td>
         </tr>
+        <tr>
+          <th></th>
+          <td></td>
+          <td>{{cantTickets + cantNoAsistidos + cant48hs + cantSucursales48hs }}</td>
+          <td></td>
+        </tr>
 
       </tbody>
     </table>
@@ -50,10 +56,10 @@
     <!--Filtros de la busqueda-->
 <div class="row" style="margin: 8px">
   <div class="col-md-5">
-      <label class="col-form-label-sm">Cliente</label>
-      <!-- <ng-select [multiple]="true" (add)="addItem($event)" (remove)="deleteItem($event)">
-          <ng-option *ngFor="let item of clientes" [value]="item.id_cliente">{{item.razon_social_cliente}}</ng-option>
-      </ng-select> -->
+      <label class="col-form-label-sm">Enviadores</label>
+      <ng-select class="custom" [multiple]="true" (add)="addItem($event)" (remove)="deleteItem($event)">
+          <ng-option class="" *ngFor="let item of enviadores" [value]="item.nombre">{{item.nombre}}</ng-option>
+      </ng-select>
   </div>
   <div class="col-md-2">
       <label class="col-form-label-sm">Fecha desde</label>
@@ -64,7 +70,7 @@
       <input id="fecha_fin" type="date" class="form-control">
   </div>
   <div class="col-md-2">
-      <label class="col-form-label-sm">Condición</label>
+      <label class="col-form-label-sm"></label>
       <!-- <ng-select (change)="onChangeCondicion($event)">
           <ng-option value="Contado">Contado</ng-option>
           <ng-option value="Crédito">Crédito</ng-option>
@@ -110,8 +116,7 @@
           <td>{{item.exento | currency:'':'':'1.0-0'}}</td>
           <td>{{item.total_venta | currency:'':'':'1.0-0'}}</td>
       </tr> -->
-      <button class="float"><img class="excel-icon" src="../../../assets/excel.ico"
-              alt="icon"></button>
+      <button class="float"><fa-icon style="color: #28B463;" [icon]="faFileExcel"></fa-icon></button>
   </tbody>
 </table>
   </div>

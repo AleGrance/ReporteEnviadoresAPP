@@ -6,6 +6,7 @@ import { ApiNoasistidosService } from 'src/app/services/api-noasistidos.service'
 import { ApiSucursales48hsService } from 'src/app/services/api-sucursales48hs.service';
 // Icons
 import { faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { faFileExcel } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-reporte',
@@ -22,11 +23,20 @@ export class ReporteComponent implements OnInit {
 
   // Icons
   faRefresh = faRefresh;
+  faFileExcel = faFileExcel;
 
   public cantTickets: any = [];
   public cantNoAsistidos: any = [];
   public cant48hs: any = [];
   public cantSucursales48hs: any = [];
+
+  // Enviadores
+  public enviadores = [
+    { nombre: 'Enviador Ticktes' },
+    { nombre: 'Enviador NoAsistidos' },
+    { nombre: 'Enviador 48hs' },
+    { nombre: 'Enviador Sucursales48hs' },
+  ]
 
   ngOnInit(): void {}
 
@@ -111,5 +121,15 @@ export class ReporteComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  // Select enviadores
+
+  addItem(e: any) {
+    console.log(e);
+  }
+
+  deleteItem(e: any) {
+    console.log(e);
   }
 }
