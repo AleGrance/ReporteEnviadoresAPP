@@ -8,7 +8,7 @@
 </ul>
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-    <table class="table">
+    <table class="table table-sm">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -21,25 +21,25 @@
         <tr>
           <th scope="row">1</th>
           <td>Enviador de tickets</td>
-          <td>{{cantTickets}}</td>
+          <td id="cant_tickets"></td>
           <td><button type="button" class="btn btn-primary btn-sm" (click)="getTickets()"><fa-icon [icon]="faRefresh"></fa-icon></button></td>
         </tr>
         <tr>
           <th scope="row">2</th>
           <td>Enviador de turnos No Asistidos</td>
-          <td>{{cantNoAsistidos}}</td>
+          <td id="cant_noasistidos"></td>
           <td><button type="button" class="btn btn-primary btn-sm" (click)="getNoAsistidos()"><fa-icon [icon]="faRefresh"></fa-icon></button></td>
         </tr>
         <tr class="table-info">
           <th scope="row">3</th>
           <td>Enviador de turnos 48hs Thinkchat</td>
-          <td>{{cant48hs}}</td>
+          <td id="cant_48hs"></td>
           <td><button type="button" class="btn btn-primary btn-sm" (click)="get48Hs()"><fa-icon [icon]="faRefresh"></fa-icon></button></td>
         </tr>
         <tr>
           <th scope="row">4</th>
           <td>Enviador de turnos Sucursales 48hs</td>
-          <td>{{cantSucursales48hs}}</td>
+          <td id="cant_sucursales48hs"></td>
           <td><button type="button" class="btn btn-primary btn-sm" (click)="getSucursales48Hs()"><fa-icon [icon]="faRefresh"></fa-icon></button></td>
         </tr>
 
