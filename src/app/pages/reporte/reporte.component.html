@@ -8,7 +8,7 @@
       role="tab"
       aria-controls="home"
       aria-selected="true"
-      >Envios por día enviadores</a
+      >Enviados Hoy - Enviadores</a
     >
   </li>
   <li class="nav-item">
@@ -20,7 +20,7 @@
       role="tab"
       aria-controls="thinchat"
       aria-selected="false"
-      >Envios por día Thinkchat</a
+      >Enviados Hoy - Thinkchat</a
     >
   </li>
   <li class="nav-item">
@@ -107,7 +107,7 @@
   </div>
 
   <!-- Tab-Dos -->
-  <div class="tab-pane fade show active" id="thinkchat" role="tabpanel" aria-labelledby="thinkchat-tab">
+  <div class="tab-pane fade show" id="thinkchat" role="tabpanel" aria-labelledby="thinkchat-tab">
     <!-- Thinkchat -->
     <div class="row">
       <table class="table table-sm">
@@ -157,7 +157,7 @@
   >
     <!--Filtros de la busqueda-->
     <div class="row" style="margin: 8px">
-      <div class="col-md-5">
+      <div class="col-md-7">
         <label class="col-form-label-sm">Enviadores</label>
         <ng-select
           [multiple]="true"
@@ -181,13 +181,6 @@
       <div class="col-md-2">
         <label class="col-form-label-sm">Fecha hasta</label>
         <input id="fecha_hasta" type="date" class="form-control" />
-      </div>
-      <div class="col-md-2">
-        <label class="col-form-label-sm"></label>
-        <!-- <ng-select (change)="onChangeCondicion($event)">
-          <ng-option value="Contado">Contado</ng-option>
-          <ng-option value="Crédito">Crédito</ng-option>
-      </ng-select> -->
       </div>
       <div style="padding-top: 37px">
         <button
