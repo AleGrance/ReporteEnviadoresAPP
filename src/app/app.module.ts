@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReporteComponent } from './pages/reporte/reporte.component';
@@ -18,7 +18,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     AppRoutingModule,
     HttpClientModule,
     FontAwesomeModule,
-    NgSelectModule
+    NgSelectModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

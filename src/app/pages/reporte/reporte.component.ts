@@ -7,6 +7,11 @@ import { ApiSucursales48hsService } from 'src/app/services/api-sucursales48hs.se
 // Icons
 import { faRefresh } from '@fortawesome/free-solid-svg-icons';
 import { faFileExcel } from '@fortawesome/free-solid-svg-icons';
+// Format
+import { CurrencyPipe, registerLocaleData, DatePipe } from '@angular/common';
+import localeEsPy from '@angular/common/locales/es-PY';
+// Para usar ngmodel
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-reporte',
@@ -19,7 +24,9 @@ export class ReporteComponent implements OnInit {
     public apiNoAsistidos: ApiNoasistidosService,
     public api48Hs: Api48hsService,
     public apiSucursales48Hs: ApiSucursales48hsService
-  ) {}
+  ) {
+    registerLocaleData(localeEsPy);
+  }
 
   // Icons
   faRefresh = faRefresh;
@@ -30,22 +37,40 @@ export class ReporteComponent implements OnInit {
   public cant48hs: any = [];
   public cantSucursales48hs: any = [];
 
+  // Fecha
+  public pipe = new DatePipe('en-US');
+
+  // Fecha
+  public hoy = new Date();
+  public hoyFormated = this.pipe.transform(this.hoy, 'dd-MM-yyyy');
+
+  public fecha_desde: FormControl = new FormControl(this.pipe.transform(this.hoy, 'dd-MM-yyyy'));
+
   // Enviadores
   public enviadores = [
     { nombre: 'Enviador Ticktes' },
     { nombre: 'Enviador NoAsistidos' },
     { nombre: 'Enviador 48hs' },
     { nombre: 'Enviador Sucursales48hs' },
-  ]
+  ];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.hoyFormated);
+  }
+
+  /**
+   *  ENVIADOS POR DIA
+   */
 
   getTickets() {
     // Se muestra el spinner al hacer click en el btn
     let cant_tickets = document.getElementById('cant_tickets');
-    cant_tickets?.insertAdjacentHTML('afterbegin', `<div class="spinner-border spinner-border-sm" role="status">
+    cant_tickets?.insertAdjacentHTML(
+      'afterbegin',
+      `<div class="spinner-border spinner-border-sm" role="status">
     <span class="visually-hidden"></span>
-  </div>`);
+  </div>`
+    );
 
     // Tickets
     this.apiTickets
@@ -63,9 +88,12 @@ export class ReporteComponent implements OnInit {
   getNoAsistidos() {
     // Se muestra el spinner al hacer click en el btn
     let cant_noasistidos = document.getElementById('cant_noasistidos');
-    cant_noasistidos?.insertAdjacentHTML('afterbegin', `<div class="spinner-border spinner-border-sm" role="status">
+    cant_noasistidos?.insertAdjacentHTML(
+      'afterbegin',
+      `<div class="spinner-border spinner-border-sm" role="status">
     <span class="visually-hidden"></span>
-  </div>`);
+  </div>`
+    );
 
     // No Asistidos
     this.apiNoAsistidos
@@ -84,9 +112,12 @@ export class ReporteComponent implements OnInit {
   get48Hs() {
     // Se muestra el spinner al hacer click en el btn
     let cant_48hs = document.getElementById('cant_48hs');
-    cant_48hs?.insertAdjacentHTML('afterbegin', `<div class="spinner-border spinner-border-sm" role="status">
+    cant_48hs?.insertAdjacentHTML(
+      'afterbegin',
+      `<div class="spinner-border spinner-border-sm" role="status">
     <span class="visually-hidden"></span>
-  </div>`);
+  </div>`
+    );
 
     // 48hs
     this.api48Hs
@@ -105,9 +136,12 @@ export class ReporteComponent implements OnInit {
   getSucursales48Hs() {
     // Se muestra el spinner al hacer click en el btn
     let cant_sucursales48hs = document.getElementById('cant_sucursales48hs');
-    cant_sucursales48hs?.insertAdjacentHTML('afterbegin', `<div class="spinner-border spinner-border-sm" role="status">
+    cant_sucursales48hs?.insertAdjacentHTML(
+      'afterbegin',
+      `<div class="spinner-border spinner-border-sm" role="status">
     <span class="visually-hidden"></span>
-  </div>`);
+  </div>`
+    );
 
     // Sucursales Sucursales 48hs
     this.apiSucursales48Hs
@@ -123,6 +157,10 @@ export class ReporteComponent implements OnInit {
       .subscribe();
   }
 
+  /**
+   *  ENVIADOS POR FECHA
+   */
+
   // Select enviadores
 
   addItem(e: any) {
@@ -131,5 +169,14 @@ export class ReporteComponent implements OnInit {
 
   deleteItem(e: any) {
     console.log(e);
+  }
+
+  buscar() {
+    let fecha_desde = (<HTMLInputElement>document.getElementById('fecha_desde'))
+      .value;
+    let fecha_hasta = (<HTMLInputElement>document.getElementById('fecha_hasta'))
+      .value;
+
+    console.log(fecha_desde, fecha_hasta);
   }
 }
