@@ -54,6 +54,8 @@ export class ReporteComponent implements OnInit {
     { nombre: 'Enviador Sucursales48hs' },
   ];
 
+  public enviadoresSeleccionados: any = [];
+
   ngOnInit(): void {
     console.log(this.hoyFormated);
   }
@@ -164,19 +166,46 @@ export class ReporteComponent implements OnInit {
   // Select enviadores
 
   addItem(e: any) {
-    console.log(e);
+    this.enviadoresSeleccionados.push(e);
+    console.log(this.enviadoresSeleccionados);
+
   }
 
   deleteItem(e: any) {
-    console.log(e);
+    let nuevoArray = this.enviadoresSeleccionados.filter((element: any) => element !== e);
+
+    console.log(nuevoArray);
   }
 
   buscar() {
-    let fecha_desde = (<HTMLInputElement>document.getElementById('fecha_desde'))
+
+    let fecha_desde: any = (<HTMLInputElement>document.getElementById('fecha_desde'))
       .value;
-    let fecha_hasta = (<HTMLInputElement>document.getElementById('fecha_hasta'))
+    let fecha_hasta: any = (<HTMLInputElement>document.getElementById('fecha_hasta'))
       .value;
 
+    if (fecha_desde == '') {
+      fecha_desde = this.hoyFormated;
+    }
+
+    if (fecha_hasta == '') {
+      fecha_hasta = fecha_desde;
+    }
+
     console.log(fecha_desde, fecha_hasta);
+
+    let filtroFechas = {
+      fecha_desde: fecha_desde,
+      fecha_hasta: fecha_hasta,
+    }
+    this.apiTickets.post('historicosFecha', filtroFechas)
+    .pipe(
+      map((data) => {
+        console.log(data);
+      })
+    )
+    .subscribe();
+
   }
+
 }
