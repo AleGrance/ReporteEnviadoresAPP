@@ -172,13 +172,12 @@ export class ReporteComponent implements OnInit {
   }
 
   deleteItem(e: any) {
-    let nuevoArray = this.enviadoresSeleccionados.filter((element: any) => element !== e);
+    this.enviadoresSeleccionados = this.enviadoresSeleccionados.filter((element: any) => element !== e.value);
 
-    console.log(nuevoArray);
+    console.log(this.enviadoresSeleccionados);
   }
 
   buscar() {
-
     let fecha_desde: any = (<HTMLInputElement>document.getElementById('fecha_desde'))
       .value;
     let fecha_hasta: any = (<HTMLInputElement>document.getElementById('fecha_hasta'))
@@ -198,14 +197,26 @@ export class ReporteComponent implements OnInit {
       fecha_desde: fecha_desde,
       fecha_hasta: fecha_hasta,
     }
-    this.apiTickets.post('historicosFecha', filtroFechas)
-    .pipe(
-      map((data) => {
-        console.log(data);
-      })
-    )
-    .subscribe();
 
+    console.log(this.enviadoresSeleccionados);
+
+    for (let e of this.enviadoresSeleccionados) {
+      if (e === "Enviador Ticktes") {
+        this.getTicketsByDate(filtroFechas);
+      }
+    }
+
+
+  }
+
+  getTicketsByDate(filtroFechas: any) {
+    this.apiTickets.post('historicosFecha', filtroFechas)
+      .pipe(
+        map((data) => {
+          console.log(data);
+        })
+      )
+      .subscribe();
   }
 
 }

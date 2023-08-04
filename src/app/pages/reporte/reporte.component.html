@@ -163,6 +163,8 @@
           [multiple]="true"
           (add)="addItem($event)"
           (remove)="deleteItem($event)"
+          [selectableGroup]="true"
+          groupBy="selectedAllGroup"
         >
           <ng-option *ngFor="let item of enviadores" [value]="item.nombre">{{
             item.nombre
