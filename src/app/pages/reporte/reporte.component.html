@@ -14,18 +14,6 @@
   <li class="nav-item">
     <a
       class="nav-link"
-      id="thinkchat-tab"
-      data-toggle="tab"
-      href="#thinkchat"
-      role="tab"
-      aria-controls="thinchat"
-      aria-selected="false"
-      >Enviados Hoy - Thinkchat</a
-    >
-  </li>
-  <li class="nav-item">
-    <a
-      class="nav-link"
       id="profile-tab"
       data-toggle="tab"
       href="#profile"
@@ -36,119 +24,81 @@
     >
   </li>
 </ul>
+
 <div class="tab-content" id="myTabContent">
   <!-- Tab-Uno -->
-  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  <div
+    class="tab-pane fade show active"
+    id="home"
+    role="tabpanel"
+    aria-labelledby="home-tab"
+  >
     <!-- Enviadores API Free -->
-    <div class="row">
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Enviados</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Enviador de tickets</td>
-            <td id="cant_tickets"></td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                (click)="getTickets()"
-              >
-                <fa-icon [icon]="faRefresh"></fa-icon>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Enviador de turnos No Asistidos</td>
-            <td id="cant_noasistidos"></td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                (click)="getNoAsistidos()"
-              >
-                <fa-icon [icon]="faRefresh"></fa-icon>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Enviador de turnos Sucursales 48hs</td>
-            <td id="cant_sucursales48hs"></td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                (click)="getSucursales48Hs()"
-              >
-                <fa-icon [icon]="faRefresh"></fa-icon>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th></th>
-            <td></td>
-            <td>
-              {{ cantTickets + cantNoAsistidos + cantSucursales48hs }}
-            </td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="table table-sm table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Enviados</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Enviador de tickets</td>
+          <td id="cant_tickets"></td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="getTickets()"
+            >
+              <fa-icon [icon]="faRefresh"></fa-icon>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>Enviador de turnos No Asistidos</td>
+          <td id="cant_noasistidos"></td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="getNoAsistidos()"
+            >
+              <fa-icon [icon]="faRefresh"></fa-icon>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td>Enviador de turnos Sucursales 48hs</td>
+          <td id="cant_sucursales48hs"></td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="getSucursales48Hs()"
+            >
+              <fa-icon [icon]="faRefresh"></fa-icon>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th></th>
+          <td></td>
+          <td>
+            {{ cantTickets + cantNoAsistidos + cantSucursales48hs }}
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- Tab-Dos -->
-  <div class="tab-pane fade show" id="thinkchat" role="tabpanel" aria-labelledby="thinkchat-tab">
-    <!-- Thinkchat -->
-    <div class="row">
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Enviados</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Enviador de Thinkchat</td>
-            <td id="cant_48hs"></td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                (click)="get48Hs()"
-              >
-                <fa-icon [icon]="faRefresh"></fa-icon>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th></th>
-            <td></td>
-            <td>
-              {{ cant48hs }}
-            </td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-  </div>
-
-  <!-- Tab-Tres -->
   <div
     class="tab-pane fade"
     id="profile"
@@ -202,7 +152,6 @@
           <th scope="col">Fecha</th>
           <th scope="col">Enviador Tickets</th>
           <th scope="col">Enviador No Asistidos</th>
-          <th scope="col">Enviador 48hs Thinkchat</th>
           <th scope="col">Enviador Sucursales 48hs</th>
         </tr>
       </thead>
