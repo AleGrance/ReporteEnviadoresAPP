@@ -172,10 +172,10 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of datosHistoricosTabla">
-          <th class="text-right" scope="row">{{item.fecha}}</th>
-          <td class="text-right">{{item.arrayUno | currency:'':'':'1.0-0'}}</td>
+          <th class="text-right" scope="row">{{item.fecha | date:'dd-MM-yyyy'}}</th>
+          <td class="text-right">{{item.arrayUno | currency:'':'':'1.0-0':'es-PY'}}</td>
           <td class="text-right"></td>
-          <td class="text-right">{{item.arrayDos | currency:'':'':'1.0-0'}}</td>
+          <td class="text-right">{{item.arrayDos | currency:'':'':'1.0-0':'es-PY'}}</td>
       </tr>
         <button class="float">
           <fa-icon style="color: #28b463" [icon]="faFileExcel"></fa-icon>
