@@ -104,7 +104,12 @@
           <th>#</th>
           <td class="text-right"><strong>Total:</strong></td>
           <td>
-            {{ cantTickets + cantNoAsistidos + cantSucursales48hs + cantPrimeraConsulta }}
+            {{
+              cantTickets +
+                cantNoAsistidos +
+                cantSucursales48hs +
+                cantPrimeraConsulta
+            }}
           </td>
           <td></td>
         </tr>
@@ -161,22 +166,34 @@
     </div>
 
     <!--Resultado de la busqueda-->
-    <table class="table table-sm">
+    <table class="table table-sm table-hover">
       <thead class="thead">
         <tr>
           <th class="text-right" scope="col">Fecha</th>
           <th class="text-right" scope="col">Enviador Tickets</th>
           <th class="text-right" scope="col">Enviador No Asistidos</th>
           <th class="text-right" scope="col">Enviador Sucursales 48hs</th>
+          <th class="text-right" scope="col">Enviador Primera Consulta</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of datosHistoricosTabla">
-          <th class="text-right" scope="row">{{item.fecha | date:'dd-MM-yyyy'}}</th>
-          <td class="text-right">{{item.arrayUno | currency:'':'':'1.0-0':'es-PY'}}</td>
-          <td class="text-right"></td>
-          <td class="text-right">{{item.arrayDos | currency:'':'':'1.0-0':'es-PY'}}</td>
-      </tr>
+          <th class="text-right" scope="row">
+            {{ item.fecha | date : "dd-MM-yyyy" }}
+          </th>
+          <td class="text-right">
+            {{ item.tickets | currency : "" : "" : "1.0-0" : "es-PY" }}
+          </td>
+          <td class="text-right">
+            {{ item.no_asistidos | currency : "" : "" : "1.0-0" : "es-PY" }}
+          </td>
+          <td class="text-right">
+            {{ item.sucursales | currency : "" : "" : "1.0-0" : "es-PY" }}
+          </td>
+          <td class="text-right">
+            {{ item.primera_consulta | currency : "" : "" : "1.0-0" : "es-PY" }}
+          </td>
+        </tr>
         <button class="float">
           <fa-icon style="color: #28b463" [icon]="faFileExcel"></fa-icon>
         </button>

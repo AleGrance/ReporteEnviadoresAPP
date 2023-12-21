@@ -40,10 +40,13 @@ export class ReporteComponent implements OnInit {
   public cantTicketsByDate: any = [];
 
   public cantNoAsistidos: any = [];
-  public cant48hs: any = [];
+  public cantNoAsistidosByDate: any = [];
+
   public cantSucursales48hs: any = [];
   public cantSucursales48hsByDate: any = [];
+
   public cantPrimeraConsulta: any = [];
+  public cantPrimeraConsultaByDate: any = [];
 
   // Fecha
   public pipe = new DatePipe('en-US');
@@ -53,7 +56,6 @@ export class ReporteComponent implements OnInit {
   public hoyFormated = this.pipe.transform(this.hoy, 'yyyy-MM-dd');
   public fecha_desde: any = '';
   public fecha_hasta: any = '';
-
 
   // Enviadores
   public enviadores = [
@@ -201,6 +203,9 @@ export class ReporteComponent implements OnInit {
   });
 
   async buscar() {
+    // Limpiar la tabla
+    this.limpiarDatosTabla();
+
     if (this.enviadoresSeleccionados.length <= 0) {
       this.toastr.info('Debe seleccionar al menos un enviador', 'Alerta', {
         progressBar: true,
@@ -278,6 +283,7 @@ export class ReporteComponent implements OnInit {
       .pipe(
         map((data) => {
           console.log(data);
+          this.cantNoAsistidosByDate = data;
         })
       )
       .subscribe();
@@ -299,44 +305,77 @@ export class ReporteComponent implements OnInit {
       .pipe(
         map((data) => {
           console.log(data);
+          this.cantPrimeraConsultaByDate = data;
         })
       )
       .subscribe();
   }
 
-  // Generar los datos para mostrar en la tabla
+  // Generar/Agrupar los datos para mostrar en la tabla
   genDataTable() {
     console.log('Gen table');
-    console.log(this.fecha_desde, this.fecha_hasta);
 
+    let fechaDesde = new Date(this.fecha_desde);
     let fechaHasta = new Date(this.fecha_hasta);
 
-    for (let fecha = new Date(this.fecha_desde); fecha <= fechaHasta; fecha.setDate(fecha.getDate() + 1)) {
+    for (fechaDesde; fechaDesde <= fechaHasta; fechaDesde.setDate(fechaDesde.getDate() + 1)) {
       console.log('dentro del for')
-      let fechaStr = fecha.toISOString().split('T')[0]; // Convertir la fecha a string en formato 'YYYY-MM-DD'
+      let fechaStr = fechaDesde.toISOString().split('T')[0]; // Convertir la fecha a string en formato 'YYYY-MM-DD'
 
-      // Buscar la cantidad en arrayUno
-      let cantidadArrayUno = 0;
-      let itemArrayUno = this.cantTicketsByDate.find((item: any) => item.fecha === fechaStr);
-      if (itemArrayUno) {
-        cantidadArrayUno = itemArrayUno.cant_enviados;
+      // Buscar la cantidad en Tickets
+      let cantidadTickets = 0;
+      if (this.cantTicketsByDate.length > 0) {
+        let itemArrayTicket = this.cantTicketsByDate.find((item: any) => item.fecha === fechaStr);
+        if (itemArrayTicket) {
+          cantidadTickets = itemArrayTicket.cant_enviados;
+        }
       }
 
-      // Buscar la cantidad en arrayDos
-      let cantidadArrayDos = 0;
-      let itemArrayDos = this.cantSucursales48hsByDate.find((item: any) => item.fecha === fechaStr);
-      if (itemArrayDos) {
-        cantidadArrayDos = itemArrayDos.cant_enviados;
+      // Buscar la cantidad en NoAsistidos
+      let cantidadNoAsistidos = 0;
+      if (this.cantNoAsistidosByDate.length > 0) {
+        let itemArrayNoAsistidos = this.cantNoAsistidosByDate.find((item: any) => item.fecha === fechaStr);
+        if (itemArrayNoAsistidos) {
+          cantidadNoAsistidos = itemArrayNoAsistidos.cant_enviados;
+        }
       }
 
-      // Agregar el objeto al array ambosArrays
+      // Buscar la cantidad en Sucursales
+      let cantidadSucursales = 0;
+      if (this.cantSucursales48hsByDate.length > 0) {
+        let itemArraySucursales = this.cantSucursales48hsByDate.find((item: any) => item.fecha === fechaStr);
+        if (itemArraySucursales) {
+          cantidadSucursales = itemArraySucursales.cant_enviados;
+        }
+      }
+
+      // Buscar la cantidad en Primera Consulta
+      let cantidadPrimeraConsulta = 0;
+      if (this.cantPrimeraConsultaByDate.length > 0) {
+        let itemArrayPrimera = this.cantPrimeraConsultaByDate.find((item: any) => item.fecha === fechaStr);
+        if (itemArrayPrimera) {
+          cantidadPrimeraConsulta = itemArrayPrimera.cant_enviados;
+        }
+      }
+
+      // Agregar el objeto al array de todos los Historicos
       this.datosHistoricosTabla.push({
         fecha: fechaStr,
-        arrayUno: cantidadArrayUno,
-        arrayDos: cantidadArrayDos,
+        tickets: cantidadTickets,
+        no_asistidos: cantidadNoAsistidos,
+        sucursales: cantidadSucursales,
+        primera_consulta: cantidadPrimeraConsulta,
       });
     }
 
     console.log(this.datosHistoricosTabla);
+  }
+
+  limpiarDatosTabla () {
+    this.datosHistoricosTabla = [];
+    this.cantTicketsByDate = [];
+    this.cantNoAsistidosByDate = [];
+    this.cantSucursales48hsByDate = [];
+    this.cantPrimeraConsultaByDate = [];
   }
 }
