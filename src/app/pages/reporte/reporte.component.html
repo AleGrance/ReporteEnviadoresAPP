@@ -194,20 +194,53 @@
             {{ item.primera_consulta | currency : "" : "" : "1.0-0" : "es-PY" }}
           </td>
         </tr>
-        <button class="float">
+        <tr>
+          <th class="text-right">Totales</th>
+          <th class="text-right">
+            {{ sumTotalTickets | currency : "" : "" : "1.0-0" : "es-PY" }}
+          </th>
+          <th class="text-right">
+            {{ sumTotalNoAsistidos | currency : "" : "" : "1.0-0" : "es-PY" }}
+          </th>
+          <th class="text-right">
+            {{ sumTotalSucursales | currency : "" : "" : "1.0-0" : "es-PY" }}
+          </th>
+          <th class="text-right">
+            {{
+              sumTotalPrimeraConsulta | currency : "" : "" : "1.0-0" : "es-PY"
+            }}
+          </th>
+        </tr>
+
+        <tr>
+          <th></th>
+          <th></th>
+          <th class="text-center">
+            Total General:
+            {{
+              sumTotalTickets +
+              sumTotalNoAsistidos +
+              sumTotalSucursales +
+              sumTotalPrimeraConsulta | currency : "" : "" : "1.0-0" : "es-PY"
+            }}
+          </th>
+          <th></th>
+          <th></th>
+        </tr>
+        <!-- <button class="float">
           <fa-icon style="color: #28b463" [icon]="faFileExcel"></fa-icon>
-        </button>
+        </button> -->
       </tbody>
     </table>
 
-    <div class="row" id="spinner-historicos" *ngIf="loading">
-      <div class="col-md-12">
+
+      <div class="col-md-12" id="spinner-historicos" *ngIf="loading">
         <div class="d-flex justify-content-center">
           <div class="spinner-border" role="status">
             <span class="visually-hidden"></span>
           </div>
         </div>
       </div>
-    </div>
+
   </div>
 </div>
