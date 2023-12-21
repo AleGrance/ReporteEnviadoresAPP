@@ -70,6 +70,9 @@ export class ReporteComponent implements OnInit {
   // Datos para la tabla
   public datosHistoricosTabla: any = [];
 
+  // Cargando
+  public loading: boolean = false;
+
   ngOnInit(): void {
     console.log('Hoy es:', this.hoyFormated);
   }
@@ -203,9 +206,7 @@ export class ReporteComponent implements OnInit {
   });
 
   async buscar() {
-    // Limpiar la tabla
-    this.limpiarDatosTabla();
-
+    // Validación previa a la busqueda
     if (this.enviadoresSeleccionados.length <= 0) {
       this.toastr.info('Debe seleccionar al menos un enviador', 'Alerta', {
         progressBar: true,
@@ -215,6 +216,12 @@ export class ReporteComponent implements OnInit {
       console.log('Debe seleccionar al menos un enviador');
       return;
     }
+
+    // Se muestra el spinner
+    this.loading = true
+
+    // Limpiar la tabla
+    this.limpiarDatosTabla();
 
     this.fecha_desde = (<HTMLInputElement>document.getElementById('fecha_desde')).value;
     this.fecha_hasta = (<HTMLInputElement>document.getElementById('fecha_hasta')).value;
@@ -367,6 +374,9 @@ export class ReporteComponent implements OnInit {
         primera_consulta: cantidadPrimeraConsulta,
       });
     }
+
+    // Se oculta el spinner
+    this.loading = false;
 
     console.log(this.datosHistoricosTabla);
   }

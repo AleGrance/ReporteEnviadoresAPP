@@ -176,7 +176,7 @@
           <th class="text-right" scope="col">Enviador Primera Consulta</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="table-body" *ngIf="!loading">
         <tr *ngFor="let item of datosHistoricosTabla">
           <th class="text-right" scope="row">
             {{ item.fecha | date : "dd-MM-yyyy" }}
@@ -199,5 +199,15 @@
         </button>
       </tbody>
     </table>
+
+    <div class="row" id="spinner-historicos" *ngIf="loading">
+      <div class="col-md-12">
+        <div class="d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden"></span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
