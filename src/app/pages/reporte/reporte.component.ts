@@ -427,5 +427,10 @@ export class ReporteComponent implements OnInit {
     this.cantNoAsistidosByDate = [];
     this.cantSucursales48hsByDate = [];
     this.cantPrimeraConsultaByDate = [];
+
+    this.sumTotalTickets = 0;
+    this.sumTotalNoAsistidos = 0;
+    this.sumTotalSucursales = 0;
+    this.sumTotalPrimeraConsulta = 0;
   }
 }
