@@ -38,15 +38,19 @@ export class ReporteComponent implements OnInit {
 
   public cantTickets: any = [];
   public cantTicketsByDate: any = [];
+  public sumTotalTickets: any = 0;
 
   public cantNoAsistidos: any = [];
   public cantNoAsistidosByDate: any = [];
+  public sumTotalNoAsistidos: any = 0;
 
   public cantSucursales48hs: any = [];
   public cantSucursales48hsByDate: any = [];
+  public sumTotalSucursales: any = 0;
 
   public cantPrimeraConsulta: any = [];
   public cantPrimeraConsultaByDate: any = [];
+  public sumTotalPrimeraConsulta: any = 0;
 
   // Fecha
   public pipe = new DatePipe('en-US');
@@ -275,44 +279,80 @@ export class ReporteComponent implements OnInit {
    */
 
   getTicketsByDate(filtroFechas: any) {
+    // Resetear monto de cantidad de tickets
+    this.sumTotalTickets = 0;
+
     this.apiTickets.post('historicosFecha', filtroFechas)
       .pipe(
         map((data) => {
           console.log(data);
           this.cantTicketsByDate = data;
+
+          for(let item of this.cantTicketsByDate) {
+            this.sumTotalTickets += parseInt(item.cant_enviados);
+          }
+
+          console.log('Total de tickets', this.sumTotalTickets);
         })
       )
       .subscribe();
   }
 
   getNoAsistidosByDate(filtroFechas: any) {
+    // Resetear monto de cantidad de tickets
+    this.sumTotalNoAsistidos = 0;
+
     this.apiNoAsistidos.post('HistoricosNoAsistidosFecha', filtroFechas)
       .pipe(
         map((data) => {
           console.log(data);
           this.cantNoAsistidosByDate = data;
+
+          for(let item of this.cantNoAsistidosByDate) {
+            this.sumTotalNoAsistidos += parseInt(item.cant_enviados);
+          }
+
+          console.log('Total de no asistidos', this.sumTotalNoAsistidos);
         })
       )
       .subscribe();
   }
 
   getSucursales48hsByDate(filtroFechas: any) {
+    // Resetear monto de cantidad de tickets
+    this.sumTotalSucursales = 0;
+
     this.apiSucursales48Hs.post('historicosSucursales48hsFecha', filtroFechas)
       .pipe(
         map((data) => {
           console.log(data);
           this.cantSucursales48hsByDate = data;
+
+          for(let item of this.cantSucursales48hsByDate) {
+            this.sumTotalSucursales += parseInt(item.cant_enviados);
+          }
+
+          console.log('Total de sucursales', this.sumTotalSucursales);
         })
       )
       .subscribe();
   }
 
   getPrimeraConsultaByDate(filtroFechas: any) {
+    // Resetear monto de cantidad de tickets
+    this.sumTotalPrimeraConsulta = 0;
+
     this.apiPrimeraConsulta.post('historicosPrimeraConsultaFecha', filtroFechas)
       .pipe(
         map((data) => {
           console.log(data);
           this.cantPrimeraConsultaByDate = data;
+
+          for(let item of this.cantPrimeraConsultaByDate) {
+            this.sumTotalPrimeraConsulta += parseInt(item.cant_enviados);
+          }
+
+          console.log('Total de primera consulta', this.sumTotalPrimeraConsulta);
         })
       )
       .subscribe();
@@ -371,7 +411,7 @@ export class ReporteComponent implements OnInit {
         tickets: cantidadTickets,
         no_asistidos: cantidadNoAsistidos,
         sucursales: cantidadSucursales,
-        primera_consulta: cantidadPrimeraConsulta,
+        primera_consulta: cantidadPrimeraConsulta
       });
     }
 
