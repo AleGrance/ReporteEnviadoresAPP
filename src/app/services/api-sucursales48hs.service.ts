@@ -13,4 +13,8 @@ export class ApiSucursales48hsService {
   get(path: any) {
     return this.http.get(this.url + '/' + path);
   }
+
+  post(path: any, body: any) {
+    return this.http.post(this.url + '/' + path, body);
+  }
 }

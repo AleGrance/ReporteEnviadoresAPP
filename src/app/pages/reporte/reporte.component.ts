@@ -12,6 +12,8 @@ import { CurrencyPipe, registerLocaleData, DatePipe } from '@angular/common';
 import localeEsPy from '@angular/common/locales/es-PY';
 // Para usar ngmodel
 import { FormControl } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ApiPrimeraconsultaService } from 'src/app/services/api-primeraconsulta.service';
 
 @Component({
   selector: 'app-reporte',
@@ -23,7 +25,9 @@ export class ReporteComponent implements OnInit {
     public apiTickets: ApiTicketsService,
     public apiNoAsistidos: ApiNoasistidosService,
     public api48Hs: Api48hsService,
-    public apiSucursales48Hs: ApiSucursales48hsService
+    public apiSucursales48Hs: ApiSucursales48hsService,
+    public apiPrimeraConsulta: ApiPrimeraconsultaService,
+    public toastr: ToastrService
   ) {
     registerLocaleData(localeEsPy);
   }
@@ -33,30 +37,39 @@ export class ReporteComponent implements OnInit {
   faFileExcel = faFileExcel;
 
   public cantTickets: any = [];
+  public cantTicketsByDate: any = [];
+
   public cantNoAsistidos: any = [];
   public cant48hs: any = [];
   public cantSucursales48hs: any = [];
+  public cantSucursales48hsByDate: any = [];
+  public cantPrimeraConsulta: any = [];
 
   // Fecha
   public pipe = new DatePipe('en-US');
 
   // Fecha
   public hoy = new Date();
-  public hoyFormated = this.pipe.transform(this.hoy, 'dd-MM-yyyy');
+  public hoyFormated = this.pipe.transform(this.hoy, 'yyyy-MM-dd');
+  public fecha_desde: any = '';
+  public fecha_hasta: any = '';
 
-  public fecha_desde: FormControl = new FormControl(this.pipe.transform(this.hoy, 'dd-MM-yyyy'));
 
   // Enviadores
   public enviadores = [
     { nombre: 'Enviador Ticktes' },
     { nombre: 'Enviador NoAsistidos' },
     { nombre: 'Enviador Sucursales48hs' },
+    { nombre: 'Enviador Primera Consulta' },
   ];
 
   public enviadoresSeleccionados: any = [];
 
+  // Datos para la tabla
+  public datosHistoricosTabla: any = [];
+
   ngOnInit(): void {
-    console.log(this.hoyFormated);
+    console.log('Hoy es:', this.hoyFormated);
   }
 
   /**
@@ -110,38 +123,6 @@ export class ReporteComponent implements OnInit {
       .subscribe();
   }
 
-  // get48Hs() {
-  //   // Se muestra el spinner al hacer click en el btn
-  //   let cant_48hs = document.getElementById('cant_48hs');
-  //   cant_48hs?.insertAdjacentHTML(
-  //     'afterbegin',
-  //     `<div class="spinner-border spinner-border-sm" role="status">
-  //   <span class="visually-hidden"></span>
-  // </div>`
-  //   );
-
-  //   // 48hs
-  //   this.api48Hs
-  //     .get('turnos48Notificados')
-  //     .pipe(
-  //       timeout(10000),
-  //       map((data) => {
-  //         this.cant48hs = data;
-  //         //console.log(this.cant48hs);
-  //         // Se reemplaza el spinner por el dato obtenido
-  //         cant_48hs?.replaceChildren(this.cant48hs);
-  //       }),
-  //       catchError((error) => {
-  //         // Manejar el error de timeout aquí
-  //         // Por ejemplo, mostrar un mensaje de error al usuario o realizar alguna acción específica
-  //         console.error('La solicitud tardó demasiado en responder:', error);
-  //         cant_48hs?.replaceChildren(this.cant48hs);
-  //         return throwError('La solicitud tardó demasiado en responder. Inténtalo de nuevo.');
-  //       })
-  //     )
-  //     .subscribe();
-  // }
-
   getSucursales48Hs() {
     // Se muestra el spinner al hacer click en el btn
     let cant_sucursales48hs = document.getElementById('cant_sucursales48hs');
@@ -166,6 +147,30 @@ export class ReporteComponent implements OnInit {
       .subscribe();
   }
 
+  getPrimeraConsulta() {
+    // Se muestra el spinner al hacer click en el btn
+    let cant_primeraConsulta = document.getElementById('cant_primeraConsulta');
+    cant_primeraConsulta?.insertAdjacentHTML(
+      'afterbegin',
+      `<div class="spinner-border spinner-border-sm" role="status">
+    <span class="visually-hidden"></span>
+  </div>`
+    );
+
+    // Sucursales Sucursales 48hs
+    this.apiPrimeraConsulta
+      .get('PrimeraConsultaNotificados')
+      .pipe(
+        map((data) => {
+          this.cantPrimeraConsulta = data;
+          //console.log(this.cantSucursales48hs);
+          // Se reemplaza el spinner por el dato obtenido
+          cant_primeraConsulta?.replaceChildren(this.cantPrimeraConsulta);
+        })
+      )
+      .subscribe();
+  }
+
   /**
    *  ENVIADOS POR FECHA
    */
@@ -184,30 +189,50 @@ export class ReporteComponent implements OnInit {
     console.log(this.enviadoresSeleccionados);
   }
 
-  buscar() {
-    let fecha_desde: any = (<HTMLInputElement>document.getElementById('fecha_desde'))
-      .value;
-    let fecha_hasta: any = (<HTMLInputElement>document.getElementById('fecha_hasta'))
-      .value;
+  deleteAllItems() {
+    console.log('clear all items');
+    this.enviadoresSeleccionados = [];
+  }
 
-    if (fecha_desde == '') {
-      fecha_desde = this.hoyFormated;
+  // Buscar
+
+  retraso = () => new Promise((r) => {
+    setTimeout(r, 2000);
+  });
+
+  async buscar() {
+    if (this.enviadoresSeleccionados.length <= 0) {
+      this.toastr.info('Debe seleccionar al menos un enviador', 'Alerta', {
+        progressBar: true,
+        positionClass: 'toast-top-center'
+      });
+
+      console.log('Debe seleccionar al menos un enviador');
+      return;
     }
 
-    if (fecha_hasta == '') {
-      fecha_hasta = fecha_desde;
+    this.fecha_desde = (<HTMLInputElement>document.getElementById('fecha_desde')).value;
+    this.fecha_hasta = (<HTMLInputElement>document.getElementById('fecha_hasta')).value;
+
+    if (this.fecha_desde == '') {
+      this.fecha_desde = this.hoyFormated;
     }
 
-    console.log(fecha_desde, fecha_hasta);
+    if (this.fecha_hasta == '') {
+      this.fecha_hasta = this.fecha_desde;
+    }
+
+    console.log(this.fecha_desde, this.fecha_hasta);
 
     let filtroFechas = {
-      fecha_desde: fecha_desde,
-      fecha_hasta: fecha_hasta,
+      fecha_desde: this.fecha_desde,
+      fecha_hasta: this.fecha_hasta,
     }
 
     console.log(this.enviadoresSeleccionados);
 
     for (let e of this.enviadoresSeleccionados) {
+      console.log(e);
       if (e === "Enviador Ticktes") {
         this.getTicketsByDate(filtroFechas);
       }
@@ -215,16 +240,34 @@ export class ReporteComponent implements OnInit {
       if (e === "Enviador NoAsistidos") {
         this.getNoAsistidosByDate(filtroFechas)
       }
+
+      if (e === "Enviador Sucursales48hs") {
+        this.getSucursales48hsByDate(filtroFechas)
+      }
+
+      if (e === "Enviador Primera Consulta") {
+        this.getPrimeraConsultaByDate(filtroFechas)
+      }
+
+      await this.retraso();
     }
 
-
+    // Generar los datos para mostrar en la tabla
+    this.genDataTable();
   }
+
+
+  /**
+   * OBTENER HISTORICOS POR FECHA
+   * @param filtroFechas
+   */
 
   getTicketsByDate(filtroFechas: any) {
     this.apiTickets.post('historicosFecha', filtroFechas)
       .pipe(
         map((data) => {
           console.log(data);
+          this.cantTicketsByDate = data;
         })
       )
       .subscribe();
@@ -240,8 +283,60 @@ export class ReporteComponent implements OnInit {
       .subscribe();
   }
 
-}
-function throwError(arg0: string): any {
-  throw new Error('Function not implemented.');
-}
+  getSucursales48hsByDate(filtroFechas: any) {
+    this.apiSucursales48Hs.post('historicosSucursales48hsFecha', filtroFechas)
+      .pipe(
+        map((data) => {
+          console.log(data);
+          this.cantSucursales48hsByDate = data;
+        })
+      )
+      .subscribe();
+  }
 
+  getPrimeraConsultaByDate(filtroFechas: any) {
+    this.apiPrimeraConsulta.post('historicosPrimeraConsultaFecha', filtroFechas)
+      .pipe(
+        map((data) => {
+          console.log(data);
+        })
+      )
+      .subscribe();
+  }
+
+  // Generar los datos para mostrar en la tabla
+  genDataTable() {
+    console.log('Gen table');
+    console.log(this.fecha_desde, this.fecha_hasta);
+
+    let fechaHasta = new Date(this.fecha_hasta);
+
+    for (let fecha = new Date(this.fecha_desde); fecha <= fechaHasta; fecha.setDate(fecha.getDate() + 1)) {
+      console.log('dentro del for')
+      let fechaStr = fecha.toISOString().split('T')[0]; // Convertir la fecha a string en formato 'YYYY-MM-DD'
+
+      // Buscar la cantidad en arrayUno
+      let cantidadArrayUno = 0;
+      let itemArrayUno = this.cantTicketsByDate.find((item: any) => item.fecha === fechaStr);
+      if (itemArrayUno) {
+        cantidadArrayUno = itemArrayUno.cant_enviados;
+      }
+
+      // Buscar la cantidad en arrayDos
+      let cantidadArrayDos = 0;
+      let itemArrayDos = this.cantSucursales48hsByDate.find((item: any) => item.fecha === fechaStr);
+      if (itemArrayDos) {
+        cantidadArrayDos = itemArrayDos.cant_enviados;
+      }
+
+      // Agregar el objeto al array ambosArrays
+      this.datosHistoricosTabla.push({
+        fecha: fechaStr,
+        arrayUno: cantidadArrayUno,
+        arrayDos: cantidadArrayDos,
+      });
+    }
+
+    console.log(this.datosHistoricosTabla);
+  }
+}
